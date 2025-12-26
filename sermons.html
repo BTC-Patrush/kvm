@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sermons | Kathmandu Vijaya Mandali</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- GSAP & ScrollTrigger -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <!-- Custom Configuration (Same as Index) -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        serif: ['Lora', 'serif'],
+                    },
+                    colors: {
+                        church: {
+                            main: '#ffffff',       // White
+                            secondary: '#f8fafc',  // Slate-50
+                            accent: '#059669',     // Emerald-600
+                            dark: '#0f172a',       // Slate-900
+                            muted: '#64748b',      // Slate-500
+                        }
+                    },
+                    backgroundImage: {
+                        'hero-pattern': "linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1438232992991-995b7058bbb3?q=80&w=2673&auto=format&fit=crop')",
+                    },
+                    boxShadow: {
+                        'soft': '0 20px 40px -15px rgba(0, 0, 0, 0.05)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .gsap-hidden { opacity: 0; visibility: hidden; }
+        .menu-icon-container { display: flex; align-items: center; justify-content: center; }
+    </style>
+</head>
+<body class="bg-church-main text-church-dark font-sans antialiased selection:bg-church-accent selection:text-white overflow-x-hidden">
+
+    <!-- Navigation -->
+    <nav id="navbar" class="fixed w-full z-50 py-6 text-church-dark bg-transparent transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
+            <!-- Logo -->
+            <a href="index.html" class="flex items-center gap-2 group">
+                <div class="w-10 h-10 bg-church-accent rounded-full flex items-center justify-center text-white shadow-lg shadow-church-accent/30">
+                    <i data-lucide="sprout" class="w-5 h-5 fill-current"></i>
+                </div>
+                <div class="flex flex-col">
+                    <span class="font-serif text-xl font-bold tracking-tight group-hover:text-church-accent transition-colors">KVM</span>
+                    <span class="text-[10px] uppercase tracking-[0.1em] text-church-muted">Kathmandu Vijaya Mandali</span>
+                </div>
+            </a>
+
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex items-center gap-8">
+                <a href="index.html" class="text-sm font-medium hover:text-church-accent transition-colors">Home</a>
+                <a href="about.html" class="text-sm font-medium hover:text-church-accent transition-colors">About</a>
+                <a href="#" class="text-sm font-bold text-church-accent transition-colors">Sermons</a> <!-- Active -->
+                <a href="ministries.html" class="text-sm font-medium hover:text-church-accent transition-colors">Ministries</a>
+                <a href="events.html" class="text-sm font-medium hover:text-church-accent transition-colors">Events</a>
+                <!-- <a href="give.html" class="text-sm font-medium hover:text-church-accent transition-colors">Give</a> -->
+            </div>
+
+            <!-- CTA & Mobile Toggle -->
+            <div class="flex items-center gap-4">
+                <button onclick="document.getElementById('plan-visit-modal').classList.remove('hidden')" class="hidden md:flex bg-church-dark text-white px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-church-accent hover:shadow-lg hover:shadow-church-accent/20 transition-all duration-300 transform hover:scale-105">
+                    Plan Your Visit
+                </button>
+                <button id="menu-btn" class="md:hidden text-church-dark hover:text-church-accent z-50 relative">
+                    <div class="menu-icon-container">
+                         <i data-lucide="menu" class="w-8 h-8"></i>
+                    </div>
+                </button>
+            </div>
+        </div>
+        <div id="nav-bg" class="absolute inset-0 bg-white/90 backdrop-blur-md border-b border-black/5 shadow-sm -z-10 opacity-0"></div>
+    </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu" class="fixed inset-0 z-40 bg-white transform translate-x-full flex flex-col justify-center items-center gap-8 text-church-dark">
+        <div class="mobile-link-container overflow-hidden"><a href="index.html" class="block text-3xl font-serif hover:text-church-accent mobile-link" onclick="toggleMenu()">Home</a></div>
+        <div class="mobile-link-container overflow-hidden"><a href="about.html" class="block text-3xl font-serif hover:text-church-accent mobile-link" onclick="toggleMenu()">About</a></div>
+        <div class="mobile-link-container overflow-hidden"><a href="#" class="block text-3xl font-serif text-church-accent mobile-link" onclick="toggleMenu()">Sermons</a></div>
+        <div class="mobile-link-container overflow-hidden"><a href="ministries.html" class="block text-3xl font-serif hover:text-church-accent mobile-link" onclick="toggleMenu()">Ministries</a></div>
+        <div class="mobile-link-container overflow-hidden"><a href="events.html" class="block text-3xl font-serif hover:text-church-accent mobile-link" onclick="toggleMenu()">Events</a></div>
+        <!-- <div class="mobile-link-container overflow-hidden"><a href="give.html" class="block text-3xl font-serif hover:text-church-accent mobile-link" onclick="toggleMenu()">Give</a></div> -->
+        <div class="mobile-link-container overflow-hidden">
+            <button onclick="document.getElementById('plan-visit-modal').classList.remove('hidden'); toggleMenu()" class="mt-4 bg-church-accent text-white px-8 py-3 rounded-full text-lg font-semibold shadow-xl shadow-church-accent/30 mobile-link">
+                Plan Your Visit
+            </button>
+        </div>
+    </div>
+
+    <!-- Page Header (Short) -->
+    <header class="relative h-[40vh] min-h-[400px] flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1544427920-c49ccfb85579?q=80&w=2548&auto=format&fit=crop')] bg-cover bg-center"></div>
+        <div class="absolute inset-0 bg-church-dark/60"></div>
+        <div class="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-church-main to-transparent"></div>
+
+        <div class="relative z-10 text-center px-4 mt-12">
+            <span class="block text-church-accent font-bold tracking-widest uppercase text-sm mb-4 gsap-header">Media Library</span>
+            <h1 class="text-4xl md:text-6xl font-serif font-bold text-white mb-6 gsap-header">Sermons & Teaching</h1>
+            <p class="text-white/80 max-w-2xl mx-auto text-lg gsap-header">Explore our collection of messages designed to help you grow in your faith.</p>
+        </div>
+    </header>
+
+    <!-- Featured Latest Sermon -->
+    <section class="py-12 -mt-16 relative z-20">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col lg:flex-row gsap-fade-up">
+                <!-- Video Placeholder -->
+                <div class="lg:w-2/3 relative aspect-video bg-black group cursor-pointer overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1478147427282-58a87a120781?q=80&w=2670&auto=format&fit=crop" class="w-full h-full object-cover opacity-80 group-hover:opacity-60 transition-opacity duration-300">
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <div class="w-20 h-20 bg-church-accent/90 rounded-full flex items-center justify-center pl-1 shadow-lg group-hover:scale-110 transition-transform duration-300">
+                            <i data-lucide="play" class="w-8 h-8 text-white fill-white"></i>
+                        </div>
+                    </div>
+                    <div class="absolute bottom-4 left-4 bg-red-600 text-white text-xs font-bold px-3 py-1 rounded uppercase tracking-wider">Latest Message</div>
+                </div>
+                
+                <!-- Details -->
+                <div class="lg:w-1/3 p-8 lg:p-12 flex flex-col justify-center bg-church-secondary">
+                    <div class="flex items-center gap-2 text-church-accent font-semibold text-sm uppercase tracking-wide mb-4">
+                        <i data-lucide="calendar" class="w-4 h-4"></i> Oct 14, 2025
+                    </div>
+                    <h2 class="text-3xl font-serif font-bold text-church-dark mb-4">Walking in Spirit</h2>
+                    <p class="text-church-muted mb-6 leading-relaxed">
+                        Discover what it means to live a life guided by the Holy Spirit. In this message, Pastor John breaks down Romans 8 and practical steps for daily spiritual walking.
+                    </p>
+                    <div class="flex items-center gap-4 mb-8">
+                        <div class="w-12 h-12 bg-gray-200 rounded-full overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=2000&auto=format&fit=crop" class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <p class="font-bold text-church-dark">Pastor John Doe</p>
+                            <p class="text-xs text-church-muted">Senior Pastor</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-3">
+                        <button class="flex-1 bg-church-dark text-white py-3 rounded-lg font-semibold hover:bg-church-accent transition-colors flex items-center justify-center gap-2">
+                            <i data-lucide="headphones" class="w-4 h-4"></i> Listen
+                        </button>
+                        <button class="flex-1 border border-church-dark/20 text-church-dark py-3 rounded-lg font-semibold hover:bg-church-dark hover:text-white transition-colors flex items-center justify-center gap-2">
+                            <i data-lucide="share-2" class="w-4 h-4"></i> Share
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Filters & Search -->
+    <section class="py-12 bg-church-main border-b border-gray-100 sticky top-20 z-30" id="filter-bar">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row gap-4 justify-between items-center">
+                
+                <!-- Search -->
+                <div class="relative w-full md:w-96">
+                    <input type="text" placeholder="Search sermons..." class="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-church-accent/20 focus:border-church-accent transition-all">
+                    <i data-lucide="search" class="absolute left-4 top-3.5 w-5 h-5 text-gray-400"></i>
+                </div>
+
+                <!-- Dropdowns -->
+                <div class="flex gap-3 w-full md:w-auto overflow-x-auto no-scrollbar pb-2 md:pb-0">
+                    <select class="px-4 py-3 bg-white border border-gray-200 rounded-full text-church-dark text-sm focus:outline-none focus:border-church-accent cursor-pointer hover:bg-gray-50">
+                        <option value="">All Topics</option>
+                        <option value="faith">Faith</option>
+                        <option value="prayer">Prayer</option>
+                        <option value="family">Family</option>
+                    </select>
+                    
+                    <select class="px-4 py-3 bg-white border border-gray-200 rounded-full text-church-dark text-sm focus:outline-none focus:border-church-accent cursor-pointer hover:bg-gray-50">
+                        <option value="">All Speakers</option>
+                        <option value="john">Pastor John</option>
+                        <option value="sarah">Pastor Sarah</option>
+                    </select>
+
+                    <select class="px-4 py-3 bg-white border border-gray-200 rounded-full text-church-dark text-sm focus:outline-none focus:border-church-accent cursor-pointer hover:bg-gray-50">
+                        <option value="">Sort By: Newest</option>
+                        <option value="oldest">Oldest</option>
+                        <option value="popular">Popular</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sermon Grid -->
+    <section class="py-16 bg-church-secondary min-h-screen">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="sermon-grid">
+                
+                <!-- Card 1 -->
+                <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group sermon-item opacity-0 translate-y-8">
+                    <div class="relative aspect-video overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1519791883288-dc8bd696e667?q=80&w=2670&auto=format&fit=crop" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                        <div class="absolute top-3 right-3 bg-black/60 backdrop-blur-md text-white text-xs px-2 py-1 rounded flex items-center gap-1">
+                            <i data-lucide="clock" class="w-3 h-3"></i> 45:20
+                        </div>
+                        <div class="absolute inset-0 bg-black/20 group-hover:bg-black/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <div class="bg-white rounded-full p-3 shadow-lg transform scale-90 group-hover:scale-100 transition-transform">
+                                <i data-lucide="play" class="w-6 h-6 text-church-dark fill-church-dark"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-3">
+                            <span class="text-xs font-bold text-church-accent uppercase tracking-wider bg-church-accent/10 px-2 py-1 rounded">Community</span>
+                            <span class="text-xs text-gray-400">Oct 07, 2025</span>
+                        </div>
+                        <h3 class="text-xl font-serif font-bold text-church-dark mb-2 group-hover:text-church-accent transition-colors">Designed for Community</h3>
+                        <p class="text-sm text-church-muted line-clamp-2 mb-4">We were not created to walk alone. Find out the biblical basis for community.</p>
+                        <div class="pt-4 border-t border-gray-100 flex items-center justify-between">
+                            <span class="text-xs font-medium text-church-dark">Pastor Sarah Smith</span>
+                            <div class="flex gap-2 text-gray-400">
+                                <button class="hover:text-church-accent"><i data-lucide="download" class="w-4 h-4"></i></button>
+                                <button class="hover:text-church-accent"><i data-lucide="share-2" class="w-4 h-4"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group sermon-item opacity-0 translate-y-8">
+                    <div class="relative aspect-video overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1544427920-c49ccfb85579?q=80&w=2548&auto=format&fit=crop" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                        <div class="absolute top-3 right-3 bg-black/60 backdrop-blur-md text-white text-xs px-2 py-1 rounded flex items-center gap-1">
+                            <i data-lucide="clock" class="w-3 h-3"></i> 38:15
+                        </div>
+                        <div class="absolute inset-0 bg-black/20 group-hover:bg-black/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <div class="bg-white rounded-full p-3 shadow-lg transform scale-90 group-hover:scale-100 transition-transform">
+                                <i data-lucide="play" class="w-6 h-6 text-church-dark fill-church-dark"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-3">
+                            <span class="text-xs font-bold text-church-accent uppercase tracking-wider bg-church-accent/10 px-2 py-1 rounded">Vision</span>
+                            <span class="text-xs text-gray-400">Sep 30, 2025</span>
+                        </div>
+                        <h3 class="text-xl font-serif font-bold text-church-dark mb-2 group-hover:text-church-accent transition-colors">The Year Ahead</h3>
+                        <p class="text-sm text-church-muted line-clamp-2 mb-4">A special vision Sunday message casting light on where our church is heading next.</p>
+                        <div class="pt-4 border-t border-gray-100 flex items-center justify-between">
+                            <span class="text-xs font-medium text-church-dark">Pastor John Doe</span>
+                            <div class="flex gap-2 text-gray-400">
+                                <button class="hover:text-church-accent"><i data-lucide="download" class="w-4 h-4"></i></button>
+                                <button class="hover:text-church-accent"><i data-lucide="share-2" class="w-4 h-4"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group sermon-item opacity-0 translate-y-8">
+                    <div class="relative aspect-video overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1504052434569-70ad5836ab65?q=80&w=2670&auto=format&fit=crop" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                        <div class="absolute top-3 right-3 bg-black/60 backdrop-blur-md text-white text-xs px-2 py-1 rounded flex items-center gap-1">
+                            <i data-lucide="clock" class="w-3 h-3"></i> 52:00
+                        </div>
+                        <div class="absolute inset-0 bg-black/20 group-hover:bg-black/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <div class="bg-white rounded-full p-3 shadow-lg transform scale-90 group-hover:scale-100 transition-transform">
+                                <i data-lucide="play" class="w-6 h-6 text-church-dark fill-church-dark"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-3">
+                            <span class="text-xs font-bold text-church-accent uppercase tracking-wider bg-church-accent/10 px-2 py-1 rounded">Prayer</span>
+                            <span class="text-xs text-gray-400">Sep 23, 2025</span>
+                        </div>
+                        <h3 class="text-xl font-serif font-bold text-church-dark mb-2 group-hover:text-church-accent transition-colors">Power of Prayer</h3>
+                        <p class="text-sm text-church-muted line-clamp-2 mb-4">Prayer changes things. Learn the fundamentals of a powerful prayer life.</p>
+                        <div class="pt-4 border-t border-gray-100 flex items-center justify-between">
+                            <span class="text-xs font-medium text-church-dark">Pastor John Doe</span>
+                            <div class="flex gap-2 text-gray-400">
+                                <button class="hover:text-church-accent"><i data-lucide="download" class="w-4 h-4"></i></button>
+                                <button class="hover:text-church-accent"><i data-lucide="share-2" class="w-4 h-4"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group sermon-item opacity-0 translate-y-8">
+                    <div class="relative aspect-video overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1491841550275-ad7854e35ca6?q=80&w=2574&auto=format&fit=crop" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                        <div class="absolute top-3 right-3 bg-black/60 backdrop-blur-md text-white text-xs px-2 py-1 rounded flex items-center gap-1">
+                            <i data-lucide="clock" class="w-3 h-3"></i> 41:10
+                        </div>
+                        <div class="absolute inset-0 bg-black/20 group-hover:bg-black/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <div class="bg-white rounded-full p-3 shadow-lg transform scale-90 group-hover:scale-100 transition-transform">
+                                <i data-lucide="play" class="w-6 h-6 text-church-dark fill-church-dark"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-3">
+                            <span class="text-xs font-bold text-church-accent uppercase tracking-wider bg-church-accent/10 px-2 py-1 rounded">Family</span>
+                            <span class="text-xs text-gray-400">Sep 16, 2025</span>
+                        </div>
+                        <h3 class="text-xl font-serif font-bold text-church-dark mb-2 group-hover:text-church-accent transition-colors">Building Strong Homes</h3>
+                        <p class="text-sm text-church-muted line-clamp-2 mb-4">Foundational principles for a christ-centered home and family life.</p>
+                        <div class="pt-4 border-t border-gray-100 flex items-center justify-between">
+                            <span class="text-xs font-medium text-church-dark">Pastor Sarah Smith</span>
+                            <div class="flex gap-2 text-gray-400">
+                                <button class="hover:text-church-accent"><i data-lucide="download" class="w-4 h-4"></i></button>
+                                <button class="hover:text-church-accent"><i data-lucide="share-2" class="w-4 h-4"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                 <!-- Card 5 -->
+                 <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group sermon-item opacity-0 translate-y-8">
+                    <div class="relative aspect-video overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1490129374918-725947a070e7?q=80&w=2670&auto=format&fit=crop" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                        <div class="absolute top-3 right-3 bg-black/60 backdrop-blur-md text-white text-xs px-2 py-1 rounded flex items-center gap-1">
+                            <i data-lucide="clock" class="w-3 h-3"></i> 48:30
+                        </div>
+                        <div class="absolute inset-0 bg-black/20 group-hover:bg-black/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <div class="bg-white rounded-full p-3 shadow-lg transform scale-90 group-hover:scale-100 transition-transform">
+                                <i data-lucide="play" class="w-6 h-6 text-church-dark fill-church-dark"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-3">
+                            <span class="text-xs font-bold text-church-accent uppercase tracking-wider bg-church-accent/10 px-2 py-1 rounded">Faith</span>
+                            <span class="text-xs text-gray-400">Sep 09, 2025</span>
+                        </div>
+                        <h3 class="text-xl font-serif font-bold text-church-dark mb-2 group-hover:text-church-accent transition-colors">Mustard Seed Faith</h3>
+                        <p class="text-sm text-church-muted line-clamp-2 mb-4">It doesn't take much to move mountains. A study on faith.</p>
+                        <div class="pt-4 border-t border-gray-100 flex items-center justify-between">
+                            <span class="text-xs font-medium text-church-dark">Pastor John Doe</span>
+                            <div class="flex gap-2 text-gray-400">
+                                <button class="hover:text-church-accent"><i data-lucide="download" class="w-4 h-4"></i></button>
+                                <button class="hover:text-church-accent"><i data-lucide="share-2" class="w-4 h-4"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                 <!-- Card 6 -->
+                 <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group sermon-item opacity-0 translate-y-8">
+                    <div class="relative aspect-video overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1470725175291-6d908588523a?q=80&w=2670&auto=format&fit=crop" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                        <div class="absolute top-3 right-3 bg-black/60 backdrop-blur-md text-white text-xs px-2 py-1 rounded flex items-center gap-1">
+                            <i data-lucide="clock" class="w-3 h-3"></i> 50:15
+                        </div>
+                        <div class="absolute inset-0 bg-black/20 group-hover:bg-black/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <div class="bg-white rounded-full p-3 shadow-lg transform scale-90 group-hover:scale-100 transition-transform">
+                                <i data-lucide="play" class="w-6 h-6 text-church-dark fill-church-dark"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-3">
+                            <span class="text-xs font-bold text-church-accent uppercase tracking-wider bg-church-accent/10 px-2 py-1 rounded">Love</span>
+                            <span class="text-xs text-gray-400">Sep 02, 2025</span>
+                        </div>
+                        <h3 class="text-xl font-serif font-bold text-church-dark mb-2 group-hover:text-church-accent transition-colors">Love Your Neighbor</h3>
+                        <p class="text-sm text-church-muted line-clamp-2 mb-4">Practical ways to show the love of Christ to our city.</p>
+                        <div class="pt-4 border-t border-gray-100 flex items-center justify-between">
+                            <span class="text-xs font-medium text-church-dark">Pastor Sarah Smith</span>
+                            <div class="flex gap-2 text-gray-400">
+                                <button class="hover:text-church-accent"><i data-lucide="download" class="w-4 h-4"></i></button>
+                                <button class="hover:text-church-accent"><i data-lucide="share-2" class="w-4 h-4"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Pagination -->
+            <div class="mt-16 text-center">
+                <button class="bg-white border border-gray-200 text-church-dark px-8 py-3 rounded-full font-bold hover:bg-church-dark hover:text-white transition-all shadow-sm">
+                    Load More Messages
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer (Standard) -->
+    <footer class="bg-church-dark pt-24 pb-12 border-t border-white/5">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-20">
+                <div class="col-span-1 md:col-span-1">
+                    <div class="flex items-center gap-2 mb-8">
+                        <div class="w-10 h-10 bg-church-accent rounded-full flex items-center justify-center text-white">
+                            <i data-lucide="sprout" class="w-5 h-5 fill-current"></i>
+                        </div>
+                        <span class="font-serif text-2xl font-bold text-white">KVM</span>
+                    </div>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-8">
+                        Loving God, Loving People, and Serving the World. Join us this Sunday for an uplifting experience.
+                    </p>
+                    <div class="flex gap-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:text-white hover:bg-church-accent transition-all"><i data-lucide="facebook" class="w-5 h-5"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:text-white hover:bg-church-accent transition-all"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:text-white hover:bg-church-accent transition-all"><i data-lucide="youtube" class="w-5 h-5"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-8 text-lg">Sundays</h4>
+                    <ul class="space-y-5 text-sm text-gray-400">
+                        <li class="flex items-center gap-3"><i data-lucide="clock" class="w-5 h-5 text-church-accent"></i> <span>9:00 AM & 11:00 AM</span></li>
+                        <li class="flex items-start gap-3"><i data-lucide="map-pin" class="w-5 h-5 text-church-accent mt-0.5"></i> <span>Kathmandu, Nepal</span></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-8 text-lg">Quick Links</h4>
+                    <ul class="space-y-4 text-sm text-gray-400">
+                        <li><a href="index.html" class="hover:text-church-accent transition-colors flex items-center gap-2"><i data-lucide="chevron-right" class="w-3 h-3"></i> Home</a></li>
+                        <li><a href="about.html" class="hover:text-church-accent transition-colors flex items-center gap-2"><i data-lucide="chevron-right" class="w-3 h-3"></i> About</a></li>
+                        <li><a href="ministries.html" class="hover:text-church-accent transition-colors flex items-center gap-2"><i data-lucide="chevron-right" class="w-3 h-3"></i> Ministries</a></li>
+                        <li><a href="events.html" class="hover:text-church-accent transition-colors flex items-center gap-2"><i data-lucide="chevron-right" class="w-3 h-3"></i> Events</a></li>
+                        <li><a href="give.html" class="hover:text-church-accent transition-colors flex items-center gap-2"><i data-lucide="chevron-right" class="w-3 h-3"></i> Give</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-8 text-lg">Weekly Update</h4>
+                    <p class="text-gray-400 text-sm mb-6">Sign up for our weekly newsletter to stay connected with what's happening.</p>
+                    <form class="flex gap-2" onsubmit="event.preventDefault(); alert('Subscribed!');">
+                        <input type="email" placeholder="Email Address" class="bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-sm text-white w-full focus:outline-none focus:border-church-accent transition-colors placeholder-gray-600">
+                        <button type="submit" class="bg-church-accent text-white px-5 py-3 rounded-lg hover:bg-white hover:text-church-accent transition-colors font-bold">Go</button>
+                    </form>
+                </div>
+            </div>
+            <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-gray-500">
+                <p>&copy; 2025 Kathmandu Vijaya Mandali. All rights reserved.</p>
+                <div class="flex gap-6 mt-4 md:mt-0">
+                    <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+                    <a href="#" class="hover:text-white transition-colors">Terms of Use</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Visit Modal (Copy of Index) -->
+    <div id="plan-visit-modal" class="hidden fixed inset-0 z-[60] overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+            <div id="modal-backdrop" class="fixed inset-0 bg-church-dark/80 backdrop-blur-sm opacity-0 transition-opacity duration-300" aria-hidden="true" onclick="document.getElementById('plan-visit-modal').classList.add('hidden')"></div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            <div id="modal-panel" class="inline-block align-bottom bg-white rounded-3xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full scale-95 opacity-0">
+                <div class="px-6 py-8 sm:p-10">
+                    <div class="flex justify-between items-center mb-8">
+                        <h3 class="text-3xl leading-6 font-serif font-bold text-church-dark">Plan Your Visit</h3>
+                        <button onclick="document.getElementById('plan-visit-modal').classList.add('hidden')" class="text-gray-400 hover:text-church-dark transition-colors bg-gray-100 p-2 rounded-full">
+                            <i data-lucide="x" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+                    <form class="space-y-5">
+                        <!-- Simplified inputs for demo -->
+                        <input type="text" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-church-dark focus:outline-none focus:border-church-accent" placeholder="Full Name">
+                        <input type="email" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-church-dark focus:outline-none focus:border-church-accent" placeholder="Email">
+                        <button type="button" onclick="alert('Thanks!'); document.getElementById('plan-visit-modal').classList.add('hidden')" class="w-full mt-6 bg-church-accent text-white py-4 rounded-xl font-bold hover:bg-church-dark transition-colors">Confirm Visit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        lucide.createIcons();
+        gsap.registerPlugin(ScrollTrigger);
+
+        // --- Navbar Scroll Effect ---
+        ScrollTrigger.create({
+            start: "top top",
+            end: 99999,
+            onUpdate: (self) => {
+                if(self.scroll() > 50) {
+                    gsap.to("#navbar", { paddingBlock: "12px", duration: 0.3 });
+                    gsap.to("#nav-bg", { opacity: 1, duration: 0.3 });
+                } else {
+                    gsap.to("#navbar", { paddingBlock: "24px", duration: 0.3 });
+                    gsap.to("#nav-bg", { opacity: 0, duration: 0.3 });
+                }
+            }
+        });
+
+        // --- Animations ---
+        const tl = gsap.timeline();
+        
+        // Header Text Stagger
+        tl.from(".gsap-header", {
+            y: 30,
+            opacity: 0,
+            duration: 0.8,
+            stagger: 0.2,
+            ease: "power3.out"
+        })
+        .from(".gsap-fade-up", {
+            y: 40,
+            opacity: 0,
+            duration: 0.8,
+            ease: "power3.out"
+        }, "-=0.4");
+
+        // Grid Animation
+        gsap.to(".sermon-item", {
+            y: 0,
+            opacity: 1,
+            duration: 0.8,
+            stagger: 0.1,
+            ease: "power3.out",
+            scrollTrigger: {
+                trigger: "#sermon-grid",
+                start: "top 80%"
+            }
+        });
+
+        // Mobile Menu
+        let menuOpen = false;
+        const menuTl = gsap.timeline({ paused: true });
+        menuTl.to("#mobile-menu", { x: "0%", duration: 0.5, ease: "power4.inOut" })
+              .from(".mobile-link", { y: 40, opacity: 0, stagger: 0.1, duration: 0.4, ease: "power3.out" }, "-=0.3");
+
+        const menuBtn = document.getElementById('menu-btn');
+        function toggleMenu() {
+            if (!menuOpen) {
+                menuTl.play();
+                menuOpen = true;
+                menuBtn.innerHTML = '<div class="menu-icon-container"><i data-lucide="x" class="w-8 h-8 text-church-dark"></i></div>';
+                lucide.createIcons();
+            } else {
+                menuTl.reverse();
+                menuOpen = false;
+                menuBtn.innerHTML = '<div class="menu-icon-container"><i data-lucide="menu" class="w-8 h-8"></i></div>';
+                lucide.createIcons();
+            }
+        }
+        menuBtn.addEventListener('click', toggleMenu);
+
+        // Modal (Simplified Logic)
+        const modal = document.getElementById('plan-visit-modal');
+        const modalBackdrop = document.getElementById('modal-backdrop');
+        const modalPanel = document.getElementById('modal-panel');
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.type === "attributes" && mutation.attributeName === "class") {
+                    if (!modal.classList.contains('hidden')) {
+                        gsap.to(modalBackdrop, { opacity: 1, duration: 0.3 });
+                        gsap.to(modalPanel, { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(1.2)" });
+                    } else {
+                        gsap.set(modalBackdrop, { opacity: 0 });
+                        gsap.set(modalPanel, { scale: 0.95, opacity: 0 });
+                    }
+                }
+            });
+        });
+        observer.observe(modal, { attributes: true });
+
+        // Sticky Search Bar Shadow on Scroll
+        ScrollTrigger.create({
+            trigger: "#filter-bar",
+            start: "top top+=80", 
+            onUpdate: (self) => {
+                 if(self.isActive) {
+                     // Can add specific active styles if needed
+                 }
+            }
+        });
+    </script>
+</body>
+</html>

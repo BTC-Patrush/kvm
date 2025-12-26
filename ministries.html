@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ministries | Kathmandu Vijaya Mandali</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- GSAP & ScrollTrigger -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <!-- Custom Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        serif: ['Lora', 'serif'],
+                    },
+                    colors: {
+                        church: {
+                            main: '#ffffff',       // White
+                            secondary: '#f8fafc',  // Slate-50
+                            accent: '#059669',     // Emerald-600
+                            dark: '#0f172a',       // Slate-900
+                            muted: '#64748b',      // Slate-500
+                        }
+                    },
+                    backgroundImage: {
+                        'hero-pattern': "linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1438232992991-995b7058bbb3?q=80&w=2673&auto=format&fit=crop')",
+                    },
+                    boxShadow: {
+                        'soft': '0 20px 40px -15px rgba(0, 0, 0, 0.05)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .gsap-hidden { opacity: 0; visibility: hidden; }
+        .menu-icon-container { display: flex; align-items: center; justify-content: center; }
+    </style>
+</head>
+<body class="bg-church-main text-church-dark font-sans antialiased selection:bg-church-accent selection:text-white overflow-x-hidden">
+
+    <!-- Navigation -->
+    <nav id="navbar" class="fixed w-full z-50 py-6 text-church-dark bg-transparent transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
+            <!-- Logo -->
+            <a href="index.html" class="flex items-center gap-2 group">
+                <div class="w-10 h-10 bg-church-accent rounded-full flex items-center justify-center text-white shadow-lg shadow-church-accent/30">
+                    <i data-lucide="sprout" class="w-5 h-5 fill-current"></i>
+                </div>
+                <div class="flex flex-col">
+                    <span class="font-serif text-xl font-bold tracking-tight group-hover:text-church-accent transition-colors">KVM</span>
+                    <span class="text-[10px] uppercase tracking-[0.1em] text-church-muted">Kathmandu Vijaya Mandali</span>
+                </div>
+            </a>
+
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex items-center gap-8">
+                <a href="index.html" class="text-sm font-medium hover:text-church-accent transition-colors">Home</a>
+                <a href="sermons.html" class="text-sm font-medium hover:text-church-accent transition-colors">Sermons</a>
+                <a href="#" class="text-sm font-bold text-church-accent transition-colors">Ministries</a> <!-- Active -->
+                <a href="events.html " class="text-sm font-medium hover:text-church-accent transition-colors">Events</a>
+                <!-- <a href="index.html#give" class="text-sm font-medium hover:text-church-accent transition-colors">Give</a> -->
+            </div>
+
+            <!-- CTA & Mobile Toggle -->
+            <div class="flex items-center gap-4">
+                <button onclick="document.getElementById('plan-visit-modal').classList.remove('hidden')" class="hidden md:flex bg-church-dark text-white px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-church-accent hover:shadow-lg hover:shadow-church-accent/20 transition-all duration-300 transform hover:scale-105">
+                    Plan Your Visit
+                </button>
+                <button id="menu-btn" class="md:hidden text-church-dark hover:text-church-accent z-50 relative">
+                    <div class="menu-icon-container">
+                         <i data-lucide="menu" class="w-8 h-8"></i>
+                    </div>
+                </button>
+            </div>
+        </div>
+        <div id="nav-bg" class="absolute inset-0 bg-white/90 backdrop-blur-md border-b border-black/5 shadow-sm -z-10 opacity-0"></div>
+    </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu" class="fixed inset-0 z-40 bg-white transform translate-x-full flex flex-col justify-center items-center gap-8 text-church-dark">
+        <div class="mobile-link-container overflow-hidden"><a href="index.html" class="block text-3xl font-serif hover:text-church-accent mobile-link" onclick="toggleMenu()">Home</a></div>
+        <div class="mobile-link-container overflow-hidden"><a href="sermons.html" class="block text-3xl font-serif hover:text-church-accent mobile-link" onclick="toggleMenu()">Sermons</a></div>
+        <div class="mobile-link-container overflow-hidden"><a href="#" class="block text-3xl font-serif text-church-accent mobile-link" onclick="toggleMenu()">Ministries</a></div>
+        <div class="mobile-link-container overflow-hidden"><a href="events.html" class="block text-3xl font-serif hover:text-church-accent mobile-link" onclick="toggleMenu()">Events</a></div>
+        <div class="mobile-link-container overflow-hidden">
+            <button onclick="document.getElementById('plan-visit-modal').classList.remove('hidden'); toggleMenu()" class="mt-4 bg-church-accent text-white px-8 py-3 rounded-full text-lg font-semibold shadow-xl shadow-church-accent/30 mobile-link">
+                Plan Your Visit
+            </button>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="relative h-[50vh] min-h-[500px] flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1529070538774-1843cb3265df?q=80&w=2670&auto=format&fit=crop')] bg-cover bg-center"></div>
+        <div class="absolute inset-0 bg-church-dark/70 mix-blend-multiply"></div>
+        <div class="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-church-main to-transparent"></div>
+
+        <div class="relative z-10 text-center px-4 mt-12">
+            <span class="block text-church-accent font-bold tracking-widest uppercase text-sm mb-4 gsap-header">Serve & Connect</span>
+            <h1 class="text-5xl md:text-7xl font-serif font-bold text-white mb-6 gsap-header">Our Ministries</h1>
+            <p class="text-white/80 max-w-2xl mx-auto text-xl gsap-header">There is a place for you here. Find your community and use your gifts to serve.</p>
+        </div>
+    </header>
+
+    <!-- Intro Text -->
+    <section class="py-20 bg-church-main">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+            <h2 class="text-3xl font-serif font-bold text-church-dark mb-6">We are one body with many parts.</h2>
+            <p class="text-church-muted text-lg leading-relaxed">
+                At Kathmandu Vijaya Mandali, we believe that church isn't just a building you walk into, but a family you belong to. Our ministries are designed to help you connect with others in your stage of life and grow deeper in your relationship with Christ.
+            </p>
+        </div>
+    </section>
+
+    <!-- Detailed Ministry List (Alternating Layout) -->
+    <section class="pb-24 bg-church-main overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6 space-y-24">
+            
+            <!-- Ministry 1: Kids -->
+            <div class="flex flex-col md:flex-row items-center gap-12 ministry-row">
+                <div class="w-full md:w-1/2 relative group">
+                    <div class="absolute -inset-4 bg-church-accent/10 rounded-3xl transform -rotate-3 transition-transform group-hover:rotate-0 duration-500"></div>
+                    <img src="https://images.unsplash.com/photo-1485546246426-74dc88dec4d9?q=80&w=2669&auto=format&fit=crop" class="relative rounded-2xl shadow-xl w-full h-[400px] object-cover">
+                </div>
+                <div class="w-full md:w-1/2">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="bg-yellow-100 p-2 rounded-full text-yellow-600"><i data-lucide="smile" class="w-6 h-6"></i></div>
+                        <span class="text-sm font-bold uppercase tracking-widest text-church-muted">Ages 0 - 12</span>
+                    </div>
+                    <h3 class="text-4xl font-serif font-bold text-church-dark mb-6">Vijaya Kids</h3>
+                    <p class="text-church-muted text-lg mb-8 leading-relaxed">
+                        We create a safe, fun, and engaging environment where children can learn about Jesus on their level. Every Sunday, our dedicated team leads kids through worship, Bible stories, and interactive games.
+                    </p>
+                    <ul class="space-y-3 mb-8 text-church-dark font-medium">
+                        <li class="flex items-center gap-3"><i data-lucide="check-circle" class="w-5 h-5 text-church-accent"></i> Secure Check-in System</li>
+                        <li class="flex items-center gap-3"><i data-lucide="check-circle" class="w-5 h-5 text-church-accent"></i> Age-Appropriate Groups</li>
+                        <li class="flex items-center gap-3"><i data-lucide="check-circle" class="w-5 h-5 text-church-accent"></i> Background-Checked Volunteers</li>
+                    </ul>
+                    <button onclick="document.getElementById('plan-visit-modal').classList.remove('hidden')" class="border-b-2 border-church-accent text-church-dark font-bold hover:text-church-accent transition-colors pb-1">Pre-register Your Kids</button>
+                </div>
+            </div>
+
+            <!-- Ministry 2: Youth (Reversed) -->
+            <div class="flex flex-col md:flex-row-reverse items-center gap-12 ministry-row">
+                <div class="w-full md:w-1/2 relative group">
+                    <div class="absolute -inset-4 bg-blue-100 rounded-3xl transform rotate-3 transition-transform group-hover:rotate-0 duration-500"></div>
+                    <img src="https://images.unsplash.com/photo-1523580494863-6f3031224c94?q=80&w=2670&auto=format&fit=crop" class="relative rounded-2xl shadow-xl w-full h-[400px] object-cover">
+                </div>
+                <div class="w-full md:w-1/2">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="bg-blue-100 p-2 rounded-full text-blue-600"><i data-lucide="zap" class="w-6 h-6"></i></div>
+                        <span class="text-sm font-bold uppercase tracking-widest text-church-muted">Grades 7 - 12</span>
+                    </div>
+                    <h3 class="text-4xl font-serif font-bold text-church-dark mb-6">KVM Youth</h3>
+                    <p class="text-church-muted text-lg mb-8 leading-relaxed">
+                        Helping the next generation navigate life with faith. Our youth ministry is a place for teenagers to belong, ask hard questions, and discover their purpose in God. We meet weekly for high-energy worship and relevant teaching.
+                    </p>
+                    <div class="bg-church-secondary p-6 rounded-xl border border-gray-100 mb-8">
+                        <h4 class="font-bold text-church-dark mb-2 flex items-center gap-2"><i data-lucide="calendar" class="w-4 h-4"></i> Weekly Gathering</h4>
+                        <p class="text-sm text-church-muted">Wednesdays at 7:00 PM | Main Auditorium</p>
+                    </div>
+                    <a href="#" class="border-b-2 border-church-accent text-church-dark font-bold hover:text-church-accent transition-colors pb-1">Follow us on Instagram</a>
+                </div>
+            </div>
+
+            <!-- Ministry 3: Worship -->
+            <div class="flex flex-col md:flex-row items-center gap-12 ministry-row">
+                <div class="w-full md:w-1/2 relative group">
+                    <div class="absolute -inset-4 bg-purple-100 rounded-3xl transform -rotate-3 transition-transform group-hover:rotate-0 duration-500"></div>
+                    <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=2670&auto=format&fit=crop" class="relative rounded-2xl shadow-xl w-full h-[400px] object-cover">
+                </div>
+                <div class="w-full md:w-1/2">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="bg-purple-100 p-2 rounded-full text-purple-600"><i data-lucide="music" class="w-6 h-6"></i></div>
+                        <span class="text-sm font-bold uppercase tracking-widest text-church-muted">Creative Arts</span>
+                    </div>
+                    <h3 class="text-4xl font-serif font-bold text-church-dark mb-6">Worship & Creative</h3>
+                    <p class="text-church-muted text-lg mb-8 leading-relaxed">
+                        We exist to create an atmosphere where people can encounter the presence of God. Whether you are a musician, singer, sound engineer, or photographer, there is a place for you to use your creative gifts.
+                    </p>
+                    <div class="flex gap-4">
+                         <button onclick="document.getElementById('volunteer-modal').classList.remove('hidden')" class="bg-church-dark text-white px-8 py-3 rounded-full font-bold hover:bg-church-accent transition-colors">Audition for Team</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ministry 4: Outreach (Reversed) -->
+            <div class="flex flex-col md:flex-row-reverse items-center gap-12 ministry-row">
+                <div class="w-full md:w-1/2 relative group">
+                    <div class="absolute -inset-4 bg-red-100 rounded-3xl transform rotate-3 transition-transform group-hover:rotate-0 duration-500"></div>
+                    <img src="https://images.unsplash.com/photo-1593113598332-cd288d649433?q=80&w=2670&auto=format&fit=crop" class="relative rounded-2xl shadow-xl w-full h-[400px] object-cover">
+                </div>
+                <div class="w-full md:w-1/2">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="bg-red-100 p-2 rounded-full text-red-600"><i data-lucide="heart" class="w-6 h-6"></i></div>
+                        <span class="text-sm font-bold uppercase tracking-widest text-church-muted">Local & Global</span>
+                    </div>
+                    <h3 class="text-4xl font-serif font-bold text-church-dark mb-6">Outreach</h3>
+                    <p class="text-church-muted text-lg mb-8 leading-relaxed">
+                        The church has left the building. We are committed to serving Kathmandu through food drives, community cleanup projects, and partnering with local organizations to meet tangible needs.
+                    </p>
+                    <div class="grid grid-cols-2 gap-4 mb-8">
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <span class="block text-2xl font-bold text-church-accent">500+</span>
+                            <span class="text-xs text-church-muted uppercase tracking-wide">Families Fed</span>
+                        </div>
+                         <div class="bg-gray-50 p-4 rounded-lg">
+                            <span class="block text-2xl font-bold text-church-accent">12</span>
+                            <span class="text-xs text-church-muted uppercase tracking-wide">Global Partners</span>
+                        </div>
+                    </div>
+                    <button onclick="document.getElementById('volunteer-modal').classList.remove('hidden')" class="border-b-2 border-church-accent text-church-dark font-bold hover:text-church-accent transition-colors pb-1">Join Outreach Team</button>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Additional Ministries Grid -->
+    <section class="py-24 bg-church-secondary">
+        <div class="max-w-7xl mx-auto px-6">
+            <h3 class="text-3xl font-serif font-bold text-church-dark mb-12 text-center">More Ways to Connect</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Grid Item 1 -->
+                <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-lg transition-shadow">
+                    <div class="w-12 h-12 bg-church-accent/10 rounded-full flex items-center justify-center text-church-accent mb-6">
+                        <i data-lucide="users" class="w-6 h-6"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-church-dark mb-3">Life Groups</h4>
+                    <p class="text-church-muted mb-4">Small groups that meet in homes throughout the week for fellowship and Bible study.</p>
+                    <a href="#" class="text-sm font-bold text-church-accent hover:text-church-dark">Find a Group &rarr;</a>
+                </div>
+                 <!-- Grid Item 2 -->
+                 <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-lg transition-shadow">
+                    <div class="w-12 h-12 bg-church-accent/10 rounded-full flex items-center justify-center text-church-accent mb-6">
+                        <i data-lucide="book-open" class="w-6 h-6"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-church-dark mb-3">Discipleship</h4>
+                    <p class="text-church-muted mb-4">Classes and courses designed to help you deepen your understanding of scripture.</p>
+                    <a href="#" class="text-sm font-bold text-church-accent hover:text-church-dark">See Classes &rarr;</a>
+                </div>
+                 <!-- Grid Item 3 -->
+                 <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-lg transition-shadow">
+                    <div class="w-12 h-12 bg-church-accent/10 rounded-full flex items-center justify-center text-church-accent mb-6">
+                        <i data-lucide="hand-heart" class="w-6 h-6"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-church-dark mb-3">Prayer Team</h4>
+                    <p class="text-church-muted mb-4">A dedicated team of intercessors who cover our church and city in prayer.</p>
+                    <a href="#" class="text-sm font-bold text-church-accent hover:text-church-dark">Submit Request &rarr;</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Volunteer CTA -->
+    <section class="py-24 bg-church-accent relative overflow-hidden text-center">
+        <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 mix-blend-multiply"></div>
+        <div class="relative z-10 max-w-3xl mx-auto px-6">
+            <h2 class="text-4xl md:text-5xl font-serif font-bold text-white mb-6">Ready to Serve?</h2>
+            <p class="text-white/90 text-xl mb-10">We believe that every member is a minister. We would love to help you find the perfect place to use your gifts.</p>
+            <button onclick="document.getElementById('volunteer-modal').classList.remove('hidden')" class="bg-white text-church-accent px-10 py-4 rounded-full font-bold hover:bg-church-dark hover:text-white transition-all shadow-xl">
+                Join a Team
+            </button>
+        </div>
+    </section>
+
+    <!-- Footer (Standard) -->
+    <footer class="bg-church-dark pt-24 pb-12 border-t border-white/5">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-20">
+                <div class="col-span-1 md:col-span-1">
+                    <div class="flex items-center gap-2 mb-8">
+                        <div class="w-10 h-10 bg-church-accent rounded-full flex items-center justify-center text-white">
+                            <i data-lucide="sprout" class="w-5 h-5 fill-current"></i>
+                        </div>
+                        <span class="font-serif text-2xl font-bold text-white">KVM</span>
+                    </div>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-8">
+                        Loving God, Loving People, and Serving the World. Join us this Sunday for an uplifting experience.
+                    </p>
+                    <div class="flex gap-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:text-white hover:bg-church-accent transition-all"><i data-lucide="facebook" class="w-5 h-5"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:text-white hover:bg-church-accent transition-all"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-8 text-lg">Sundays</h4>
+                    <ul class="space-y-5 text-sm text-gray-400">
+                        <li class="flex items-center gap-3"><i data-lucide="clock" class="w-5 h-5 text-church-accent"></i> <span>9:00 AM & 11:00 AM</span></li>
+                        <li class="flex items-start gap-3"><i data-lucide="map-pin" class="w-5 h-5 text-church-accent mt-0.5"></i> <span>Kathmandu, Nepal</span></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-8 text-lg">Quick Links</h4>
+                    <ul class="space-y-4 text-sm text-gray-400">
+                        <li><a href="index.html" class="hover:text-church-accent transition-colors flex items-center gap-2"><i data-lucide="chevron-right" class="w-3 h-3"></i> Home</a></li>
+                        <li><a href="#" class="hover:text-church-accent transition-colors flex items-center gap-2"><i data-lucide="chevron-right" class="w-3 h-3"></i> Leadership</a></li>
+                        <li><a href="#" class="hover:text-church-accent transition-colors flex items-center gap-2"><i data-lucide="chevron-right" class="w-3 h-3"></i> Care & Prayer</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-8 text-lg">Weekly Update</h4>
+                    <p class="text-gray-400 text-sm mb-6">Sign up for our weekly newsletter to stay connected.</p>
+                    <form class="flex gap-2" onsubmit="event.preventDefault(); alert('Subscribed!');">
+                        <input type="email" placeholder="Email Address" class="bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-sm text-white w-full focus:outline-none focus:border-church-accent transition-colors placeholder-gray-600">
+                        <button type="submit" class="bg-church-accent text-white px-5 py-3 rounded-lg hover:bg-white hover:text-church-accent transition-colors font-bold">Go</button>
+                    </form>
+                </div>
+            </div>
+            <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-gray-500">
+                <p>&copy; 2025 Kathmandu Vijaya Mandali. All rights reserved.</p>
+                <div class="flex gap-6 mt-4 md:mt-0">
+                    <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+                    <a href="#" class="hover:text-white transition-colors">Terms of Use</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Visit Modal -->
+    <div id="plan-visit-modal" class="hidden fixed inset-0 z-[60] overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+            <div id="modal-backdrop" class="fixed inset-0 bg-church-dark/80 backdrop-blur-sm opacity-0 transition-opacity duration-300" aria-hidden="true" onclick="document.getElementById('plan-visit-modal').classList.add('hidden')"></div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            <div id="modal-panel" class="inline-block align-bottom bg-white rounded-3xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full scale-95 opacity-0">
+                <div class="px-6 py-8 sm:p-10">
+                    <div class="flex justify-between items-center mb-8">
+                        <h3 class="text-3xl leading-6 font-serif font-bold text-church-dark">Plan Your Visit</h3>
+                        <button onclick="document.getElementById('plan-visit-modal').classList.add('hidden')" class="text-gray-400 hover:text-church-dark transition-colors bg-gray-100 p-2 rounded-full">
+                            <i data-lucide="x" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+                    <form class="space-y-5">
+                        <input type="text" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-church-dark focus:outline-none focus:border-church-accent" placeholder="Full Name">
+                        <input type="email" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-church-dark focus:outline-none focus:border-church-accent" placeholder="Email">
+                        <button type="button" onclick="alert('Thanks!'); document.getElementById('plan-visit-modal').classList.add('hidden')" class="w-full mt-6 bg-church-accent text-white py-4 rounded-xl font-bold hover:bg-church-dark transition-colors">Confirm Visit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Volunteer Modal (Specific to this page) -->
+    <div id="volunteer-modal" class="hidden fixed inset-0 z-[60] overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 bg-church-dark/80 backdrop-blur-sm transition-opacity" aria-hidden="true" onclick="document.getElementById('volunteer-modal').classList.add('hidden')"></div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            <div class="inline-block align-bottom bg-white rounded-3xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full">
+                <div class="px-6 py-8 sm:p-10">
+                    <div class="flex justify-between items-center mb-8">
+                        <h3 class="text-3xl leading-6 font-serif font-bold text-church-dark">Join a Team</h3>
+                        <button onclick="document.getElementById('volunteer-modal').classList.add('hidden')" class="text-gray-400 hover:text-church-dark transition-colors bg-gray-100 p-2 rounded-full">
+                            <i data-lucide="x" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+                    <form class="space-y-5">
+                        <input type="text" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-church-dark" placeholder="Name">
+                        <input type="email" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-church-dark" placeholder="Email">
+                        <div class="relative">
+                            <select class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-church-dark focus:outline-none appearance-none">
+                                <option>I'm interested in...</option>
+                                <option>Kids Ministry</option>
+                                <option>Youth</option>
+                                <option>Worship/Tech</option>
+                                <option>Outreach</option>
+                            </select>
+                            <i data-lucide="chevron-down" class="absolute right-3 top-3.5 w-4 h-4 text-gray-400 pointer-events-none"></i>
+                        </div>
+                        <button type="button" onclick="alert('Thanks for your interest! We will contact you soon.'); document.getElementById('volunteer-modal').classList.add('hidden')" class="w-full mt-6 bg-church-accent text-white py-4 rounded-xl font-bold hover:bg-church-dark transition-colors">Sign Up</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        lucide.createIcons();
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Navbar Scroll
+        ScrollTrigger.create({
+            start: "top top",
+            end: 99999,
+            onUpdate: (self) => {
+                if(self.scroll() > 50) {
+                    gsap.to("#navbar", { paddingBlock: "12px", duration: 0.3 });
+                    gsap.to("#nav-bg", { opacity: 1, duration: 0.3 });
+                } else {
+                    gsap.to("#navbar", { paddingBlock: "24px", duration: 0.3 });
+                    gsap.to("#nav-bg", { opacity: 0, duration: 0.3 });
+                }
+            }
+        });
+
+        // Header Animations
+        const tl = gsap.timeline();
+        tl.from(".gsap-header", {
+            y: 30,
+            opacity: 0,
+            duration: 0.8,
+            stagger: 0.2,
+            ease: "power3.out"
+        });
+
+        // Ministry Rows Animation
+        gsap.utils.toArray('.ministry-row').forEach(row => {
+            gsap.from(row, {
+                y: 50,
+                opacity: 0,
+                duration: 0.8,
+                scrollTrigger: {
+                    trigger: row,
+                    start: "top 75%",
+                    toggleActions: "play none none reverse"
+                }
+            });
+        });
+
+        // Mobile Menu
+        let menuOpen = false;
+        const menuTl = gsap.timeline({ paused: true });
+        menuTl.to("#mobile-menu", { x: "0%", duration: 0.5, ease: "power4.inOut" })
+              .from(".mobile-link", { y: 40, opacity: 0, stagger: 0.1, duration: 0.4, ease: "power3.out" }, "-=0.3");
+
+        const menuBtn = document.getElementById('menu-btn');
+        function toggleMenu() {
+            if (!menuOpen) {
+                menuTl.play();
+                menuOpen = true;
+                menuBtn.innerHTML = '<div class="menu-icon-container"><i data-lucide="x" class="w-8 h-8 text-church-dark"></i></div>';
+                lucide.createIcons();
+            } else {
+                menuTl.reverse();
+                menuOpen = false;
+                menuBtn.innerHTML = '<div class="menu-icon-container"><i data-lucide="menu" class="w-8 h-8"></i></div>';
+                lucide.createIcons();
+            }
+        }
+        menuBtn.addEventListener('click', toggleMenu);
+
+        // Modal Logic (Reused for both modals simply)
+        function setupModal(modalId, btnId) {
+             // Logic handled inline for simplicity in this demo, 
+             // but here is standard mutation observer if we wanted complex transitions
+        }
+        
+        // Simple GSAP transition for Visit modal
+        const visitModal = document.getElementById('plan-visit-modal');
+        const visitBackdrop = visitModal.querySelector('#modal-backdrop');
+        const visitPanel = visitModal.querySelector('#modal-panel');
+        
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.type === "attributes" && mutation.attributeName === "class") {
+                    if (!visitModal.classList.contains('hidden')) {
+                        gsap.to(visitBackdrop, { opacity: 1, duration: 0.3 });
+                        gsap.to(visitPanel, { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(1.2)" });
+                    } else {
+                        gsap.set(visitBackdrop, { opacity: 0 });
+                        gsap.set(visitPanel, { scale: 0.95, opacity: 0 });
+                    }
+                }
+            });
+        });
+        observer.observe(visitModal, { attributes: true });
+
+    </script>
+</body>
+</html>
