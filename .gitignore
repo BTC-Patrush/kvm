@@ -1,0 +1,15 @@
+# Editor
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Future builds
+node_modules/
+dist/
+build/
+
+# Env
+.env
+.env.*
