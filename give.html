@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Give | Kathmandu Vijaya Mandali</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- GSAP & ScrollTrigger -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <!-- Custom Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        serif: ['Lora', 'serif'],
+                    },
+                    colors: {
+                        church: {
+                            main: '#ffffff',
+                            secondary: '#f8fafc',
+                            accent: '#059669',     // Emerald-600
+                            dark: '#0f172a',       // Slate-900
+                            muted: '#64748b',
+                            gold: '#d4af37'
+                        },
+                        brand: {
+                            esewa: '#60bb46',
+                            khalti: '#5c2d91'
+                        }
+                    },
+                    backgroundImage: {
+                        'noise': "url('https://www.transparenttextures.com/patterns/noise.png')",
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .gsap-hidden { opacity: 0; visibility: hidden; }
+        .menu-icon-container { display: flex; align-items: center; justify-content: center; }
+    </style>
+</head>
+<body class="bg-church-main text-church-dark font-sans antialiased selection:bg-church-accent selection:text-white overflow-x-hidden">
+
+    <!-- Navigation -->
+    <nav id="navbar" class="fixed w-full z-50 py-4 bg-white/95 backdrop-blur-md border-b border-gray-100 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
+            <!-- Logo -->
+            <a href="index.html" class="flex items-center gap-2 group">
+                <div class="w-10 h-10 bg-church-accent rounded-full flex items-center justify-center text-white shadow-lg shadow-church-accent/30">
+                    <i data-lucide="sprout" class="w-5 h-5 fill-current"></i>
+                </div>
+                <div class="flex flex-col">
+                    <span class="font-serif text-xl font-bold tracking-tight group-hover:text-church-accent transition-colors">KVM</span>
+                    <span class="text-[10px] uppercase tracking-[0.1em] text-church-muted">Kathmandu Vijaya Mandali</span>
+                </div>
+            </a>
+
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex items-center gap-8">
+                <a href="index.html" class="text-sm font-medium hover:text-church-accent transition-colors">Home</a>
+                <a href="about.html" class="text-sm font-medium hover:text-church-accent transition-colors">About</a>
+                <a href="sermons.html" class="text-sm font-medium hover:text-church-accent transition-colors">Sermons</a>
+                <a href="ministries.html" class="text-sm font-medium hover:text-church-accent transition-colors">Ministries</a>
+                <a href="events.html" class="text-sm font-medium hover:text-church-accent transition-colors">Events</a>
+                <a href="gallery.html" class="text-sm font-medium hover:text-church-accent transition-colors">Gallery</a>
+                <a href="articles.html" class="text-sm font-medium hover:text-church-accent transition-colors">Articles</a>
+                <a href="#" class="text-sm font-bold text-church-accent transition-colors">Give</a> <!-- Active -->
+            </div>
+
+            <!-- CTA & Mobile Toggle -->
+            <div class="flex items-center gap-4">
+                <button onclick="document.getElementById('plan-visit-modal').classList.remove('hidden')" class="hidden md:flex bg-church-dark text-white px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-church-accent hover:shadow-lg hover:shadow-church-accent/20 transition-all duration-300 transform hover:scale-105">
+                    Plan Your Visit
+                </button>
+                <button id="menu-btn" class="md:hidden text-church-dark hover:text-church-accent z-50 relative">
+                    <div class="menu-icon-container">
+                         <i data-lucide="menu" class="w-8 h-8"></i>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu" class="fixed inset-0 z-40 bg-white transform translate-x-full flex flex-col justify-center items-center gap-8 text-church-dark">
+        <div class="mobile-link-container overflow-hidden"><a href="index.html" class="block text-3xl font-serif hover:text-church-accent mobile-link" onclick="toggleMenu()">Home</a></div>
+        <div class="mobile-link-container overflow-hidden"><a href="about.html" class="block text-3xl font-serif hover:text-church-accent mobile-link" onclick="toggleMenu()">About</a></div>
+        <div class="mobile-link-container overflow-hidden"><a href="sermons.html" class="block text-3xl font-serif hover:text-church-accent mobile-link" onclick="toggleMenu()">Sermons</a></div>
+        <div class="mobile-link-container overflow-hidden"><a href="ministries.html" class="block text-3xl font-serif hover:text-church-accent mobile-link" onclick="toggleMenu()">Ministries</a></div>
+        <div class="mobile-link-container overflow-hidden"><a href="events.html" class="block text-3xl font-serif hover:text-church-accent mobile-link" onclick="toggleMenu()">Events</a></div>
+        <div class="mobile-link-container overflow-hidden"><a href="gallery.html" class="block text-3xl font-serif hover:text-church-accent mobile-link" onclick="toggleMenu()">Gallery</a></div>
+        <div class="mobile-link-container overflow-hidden"><a href="articles.html" class="block text-3xl font-serif text-church-accent mobile-link" onclick="toggleMenu()">Articles</a></div>
+        <div class="mobile-link-container overflow-hidden"><a href="#" class="block text-3xl font-serif text-church-accent mobile-link" onclick="toggleMenu()">Give</a></div>
+        <div class="mobile-link-container overflow-hidden">
+            <button onclick="document.getElementById('plan-visit-modal').classList.remove('hidden'); toggleMenu()" class="mt-4 bg-church-accent text-white px-8 py-3 rounded-full text-lg font-semibold shadow-xl shadow-church-accent/30 mobile-link">
+                Plan Your Visit
+            </button>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <header class="relative pt-32 pb-20 md:pt-48 md:pb-32 bg-church-secondary overflow-hidden">
+        <div class="absolute inset-0 bg-noise opacity-40"></div>
+        <!-- Abstract Shapes -->
+        <div class="absolute top-0 right-0 w-96 h-96 bg-church-accent/5 rounded-full blur-3xl translate-x-1/2 -translate-y-1/2"></div>
+        <div class="absolute bottom-0 left-0 w-96 h-96 bg-church-gold/5 rounded-full blur-3xl -translate-x-1/2 translate-y-1/2"></div>
+
+        <div class="relative z-10 max-w-4xl mx-auto px-6 text-center">
+            <div class="gsap-hero opacity-0 translate-y-10">
+                <span class="text-church-accent font-bold tracking-[0.2em] text-xs uppercase mb-4 block">Generosity</span>
+                <h1 class="text-5xl md:text-7xl font-serif font-bold text-church-dark mb-6 leading-tight">
+                    Giving is an Act of <span class="italic text-church-accent">Worship.</span>
+                </h1>
+                <p class="text-church-muted text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed">
+                    Your generosity enables us to minister to our city and make a difference in the world. Thank you for partnering with us in this mission.
+                </p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Checklist Section (Overlaps Hero) -->
+    <section class="relative z-20 -mt-20 pb-20">
+        <div class="max-w-4xl mx-auto px-6">
+            <div class="bg-white rounded-3xl shadow-xl p-8 md:p-12 border border-gray-100 gsap-hero opacity-0 translate-y-10">
+                <div class="text-center mb-10">
+                    <h2 class="text-2xl md:text-3xl font-serif font-bold text-church-dark mb-4">Before You Give</h2>
+                    <p class="text-church-muted leading-relaxed max-w-2xl mx-auto">
+                        We seek to follow the example and teaching of our Lord Jesus in financial matters. When people ask us whether they can support this ministry, we ask them to go through this checklist first.
+                    </p>
+                </div>
+                
+                <div class="space-y-8">
+                    <!-- Point 1 -->
+                    <div class="flex gap-4 md:gap-6 items-start">
+                        <div class="flex-shrink-0 w-10 h-10 rounded-full bg-church-secondary text-church-accent border border-church-accent/20 flex items-center justify-center font-bold font-serif text-lg">1</div>
+                        <div>
+                            <h3 class="font-bold text-church-dark text-lg mb-2">Are you a born-again child of God?</h3>
+                            <p class="text-church-muted text-sm leading-relaxed mb-2">
+                                Do you agree with our doctrinal statement? It is a great honour and privilege to support the work of God on earth; but that privilege is given only to His born-again children. <span class="text-xs text-church-accent font-bold">(3 John 7)</span>
+                            </p>
+                            <a href="about.html" class="text-xs font-bold text-church-accent hover:underline inline-flex items-center gap-1">What We Believe <i data-lucide="arrow-right" class="w-3 h-3"></i></a>
+                        </div>
+                    </div>
+
+                    <!-- Point 2 -->
+                    <div class="flex gap-4 md:gap-6 items-start">
+                        <div class="flex-shrink-0 w-10 h-10 rounded-full bg-church-secondary text-church-accent border border-church-accent/20 flex items-center justify-center font-bold font-serif text-lg">2</div>
+                        <div>
+                            <h3 class="font-bold text-church-dark text-lg mb-2">Do you have enough for your family?</h3>
+                            <p class="text-church-muted text-sm leading-relaxed">
+                                Are you sure that your giving will not put your family under financial strain? You must take care of your family's needs first. Our Father in heaven does not want any of His children to suffer just because they gave Him money. <span class="text-xs text-church-accent font-bold">(Mark 7:9-13, 1 Tim 5:8)</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Point 3 -->
+                    <div class="flex gap-4 md:gap-6 items-start">
+                        <div class="flex-shrink-0 w-10 h-10 rounded-full bg-church-secondary text-church-accent border border-church-accent/20 flex items-center justify-center font-bold font-serif text-lg">3</div>
+                        <div>
+                            <h3 class="font-bold text-church-dark text-lg mb-2">Do you have large debts to repay?</h3>
+                            <p class="text-church-muted text-sm leading-relaxed mb-3">
+                                If so, please clear those debts first. God wants His children to live restful lives, free from debt. We must give to Caesar what is his before giving to God. <span class="text-xs text-church-accent font-bold">(Matt 22:21, Rom 13:8)</span>
+                            </p>
+                            <div class="text-xs text-church-muted/8 italic bg-gray-50 p-3 rounded-lg border border-gray-100">
+                                <strong>Note:</strong> A house-loan is not considered a "debt" in this context as it is an asset of equal value. Similarly for insured vehicle loans.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Point 4 -->
+                    <div class="flex gap-4 md:gap-6 items-start">
+                        <div class="flex-shrink-0 w-10 h-10 rounded-full bg-church-secondary text-church-accent border border-church-accent/20 flex items-center justify-center font-bold font-serif text-lg">4</div>
+                        <div>
+                            <h3 class="font-bold text-church-dark text-lg mb-2">Do you have a clear conscience?</h3>
+                            <p class="text-church-muted text-sm leading-relaxed">
+                                Have you done your best to reconcile with those you have hurt in any way? God will not accept an offering from anyone who has hurt someone and still not apologised. <span class="text-xs text-church-accent font-bold">(Matt 5:23-24)</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Point 5 -->
+                    <div class="flex gap-4 md:gap-6 items-start">
+                        <div class="flex-shrink-0 w-10 h-10 rounded-full bg-church-secondary text-church-accent border border-church-accent/20 flex items-center justify-center font-bold font-serif text-lg">5</div>
+                        <div>
+                            <h3 class="font-bold text-church-dark text-lg mb-2">Are you giving freely and cheerfully?</h3>
+                            <p class="text-church-muted text-sm leading-relaxed">
+                                God loves cheerful givers, not reluctant ones. He does not want gifts given under pressure, obligation, or merely to ease a conscience. <span class="text-xs text-church-accent font-bold">(2 Cor 9:7)</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ways to Give Grid -->
+    <section class="py-20 bg-church-secondary border-t border-gray-200">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-serif font-bold text-church-dark mb-4">Ways to Give</h2>
+                <p class="text-church-muted max-w-2xl mx-auto">If you have reviewed the checklist and feel led to give, here are the available methods.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                
+                <!-- Digital Wallets (QR) -->
+                <div class="bg-white rounded-3xl shadow-sm hover:shadow-xl transition-all duration-300 p-8 border border-gray-100 gsap-card opacity-0 translate-y-8 flex flex-col h-full">
+                    <div class="w-14 h-14 bg-green-100 rounded-2xl flex items-center justify-center text-green-600 mb-6">
+                        <i data-lucide="smartphone" class="w-7 h-7"></i>
+                    </div>
+                    <h3 class="text-2xl font-serif font-bold text-church-dark mb-4">Digital Wallets</h3>
+                    <p class="text-church-muted mb-8 text-sm">Select your preferred wallet to scan the QR code.</p>
+                    
+                    <div class="bg-white border-2 border-dashed border-gray-200 rounded-xl p-6 flex flex-col items-center mt-auto">
+                        <!-- QR Code Area -->
+                        <div id="qr-container" class="bg-brand-esewa/10 w-48 h-48 rounded-lg mb-6 flex items-center justify-center relative overflow-hidden transition-colors duration-300">
+                            <i id="qr-icon" data-lucide="qr-code" class="w-20 h-20 text-brand-esewa transition-colors duration-300"></i>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <span id="qr-text" class="bg-white px-4 py-1.5 rounded-full text-sm font-bold shadow-md text-brand-esewa transition-colors duration-300">Scan eSewa</span>
+                            </div>
+                        </div>
+
+                        <!-- Wallet Buttons -->
+                        <div class="flex gap-3 justify-center w-full flex-wrap">
+                            <button onclick="switchWallet('esewa')" class="wallet-btn btn-esewa px-4 py-2 bg-brand-esewa/10 text-brand-esewa text-sm font-bold rounded-lg hover:bg-brand-esewa hover:text-white transition-all ring-2 ring-offset-2 ring-brand-esewa">eSewa</button>
+                            <button onclick="switchWallet('khalti')" class="wallet-btn btn-khalti px-4 py-2 bg-brand-khalti/10 text-brand-khalti text-sm font-bold rounded-lg hover:bg-brand-khalti hover:text-white transition-all">Khalti</button>
+                            <button onclick="switchWallet('ime')" class="wallet-btn btn-ime px-4 py-2 bg-red-50 text-red-600 text-sm font-bold rounded-lg hover:bg-red-600 hover:text-white transition-all">IME Pay</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bank Transfer -->
+                <div class="bg-white rounded-3xl shadow-sm hover:shadow-xl transition-all duration-300 p-8 border border-gray-100 gsap-card opacity-0 translate-y-8 flex flex-col h-full">
+                    <div class="w-14 h-14 bg-blue-100 rounded-2xl flex items-center justify-center text-blue-600 mb-6">
+                        <i data-lucide="building-2" class="w-7 h-7"></i>
+                    </div>
+                    <h3 class="text-2xl font-serif font-bold text-church-dark mb-4">Bank Transfer</h3>
+                    <p class="text-church-muted mb-8 text-sm">Direct deposit. Please include your name in remarks.</p>
+                    
+                    <div class="space-y-4 mt-auto">
+                        <div class="bg-church-secondary p-5 rounded-xl border border-gray-100">
+                            <p class="text-xs font-bold text-church-muted uppercase mb-1">Bank Name</p>
+                            <p class="text-lg font-bold text-church-dark">Nabil Bank Ltd.</p>
+                        </div>
+                        <div class="bg-church-secondary p-5 rounded-xl border border-gray-100">
+                            <p class="text-xs font-bold text-church-muted uppercase mb-1">Account Name</p>
+                            <p class="text-lg font-bold text-church-dark leading-tight">Kathmandu Vijaya Mandali</p>
+                        </div>
+                        <div class="bg-church-secondary p-5 rounded-xl border border-gray-100 relative group cursor-pointer hover:border-church-accent/30 transition-colors" onclick="copyToClipboard('0210017500342')">
+                            <p class="text-xs font-bold text-church-muted uppercase mb-1">Account Number</p>
+                            <p class="text-lg font-bold text-church-dark font-mono">0210017500342</p>
+                            <div class="absolute right-4 top-1/2 -translate-y-1/2 text-church-accent opacity-0 group-hover:opacity-100 transition-opacity bg-white p-2 rounded-full shadow-sm">
+                                <i data-lucide="copy" class="w-4 h-4"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Why We Give -->
+    <section class="py-20 bg-church-main">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center gap-16">
+            <div class="md:w-1/2">
+                <div class="relative">
+                    <div class="absolute -inset-4 bg-church-accent/10 rounded-3xl transform -rotate-3"></div>
+                    <img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=2670&auto=format&fit=crop" class="relative rounded-3xl shadow-2xl w-full h-[500px] object-cover">
+                </div>
+            </div>
+            <div class="md:w-1/2">
+                <h2 class="text-4xl font-serif font-bold text-church-dark mb-6">Where does it go?</h2>
+                <p class="text-church-muted text-lg mb-8 leading-relaxed">
+                    We believe in financial transparency and stewardship. Every rupee given to KVM is used to further the kingdom of God in Kathmandu and beyond.
+                </p>
+                <div class="space-y-8">
+                    <div class="flex gap-4">
+                        <div class="w-12 h-12 bg-church-secondary rounded-full flex items-center justify-center flex-shrink-0 text-church-accent">
+                            <i data-lucide="heart-handshake" class="w-6 h-6"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-church-dark text-lg mb-1">Local Outreach</h4>
+                            <p class="text-church-muted text-sm">Feeding programs, community cleanups, and support for local families in need.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="w-12 h-12 bg-church-secondary rounded-full flex items-center justify-center flex-shrink-0 text-church-accent">
+                            <i data-lucide="users" class="w-6 h-6"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-church-dark text-lg mb-1">Next Generation</h4>
+                            <p class="text-church-muted text-sm">Investing in our kids and youth ministries, camps, and discipleship materials.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="w-12 h-12 bg-church-secondary rounded-full flex items-center justify-center flex-shrink-0 text-church-accent">
+                            <i data-lucide="church" class="w-6 h-6"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-church-dark text-lg mb-1">Ministry Operations</h4>
+                            <p class="text-church-muted text-sm">Keeping the lights on, staff support, and maintaining our facility for weekly gatherings.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Need Help / Contact -->
+    <section class="py-24 bg-church-secondary">
+        <div class="max-w-3xl mx-auto px-6 text-center">
+            <div class="bg-white rounded-3xl p-12 border border-gray-100 shadow-sm">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-church-accent/10 text-church-accent mb-6">
+                    <i data-lucide="help-circle" class="w-8 h-8"></i>
+                </div>
+                <h2 class="text-3xl font-serif font-bold text-church-dark mb-4">Need Assistance?</h2>
+                <p class="text-church-muted text-lg mb-8">
+                    If you have questions about giving options, need a tax receipt, or would like to speak with our finance team, we are here to help.
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center gap-4">
+                    <a href="mailto:finance@kvm.org.np" class="inline-flex items-center justify-center gap-2 bg-church-dark text-white px-8 py-3 rounded-xl font-bold hover:bg-church-accent transition-colors">
+                        <i data-lucide="mail" class="w-4 h-4"></i> finance@kvm.org.np
+                    </a>
+                    <a href="tel:+9779800000000" class="inline-flex items-center justify-center gap-2 border border-gray-200 text-church-dark px-8 py-3 rounded-xl font-bold hover:border-church-dark transition-colors">
+                        <i data-lucide="phone" class="w-4 h-4"></i> Call Office
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer (Standard) -->
+    <footer class="bg-church-dark pt-24 pb-12 border-t border-white/5">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-20">
+                <div class="col-span-1 md:col-span-1">
+                    <div class="flex items-center gap-2 mb-8">
+                        <div class="w-10 h-10 bg-church-accent rounded-full flex items-center justify-center text-white">
+                            <i data-lucide="sprout" class="w-5 h-5 fill-current"></i>
+                        </div>
+                        <span class="font-serif text-2xl font-bold text-white">KVM</span>
+                    </div>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-8">
+                        Loving God, Loving People, and Serving the World. Join us this Sunday for an uplifting experience.
+                    </p>
+                    <div class="flex gap-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:text-white hover:bg-church-accent transition-all"><i data-lucide="facebook" class="w-5 h-5"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:text-white hover:bg-church-accent transition-all"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:text-white hover:bg-church-accent transition-all"><i data-lucide="youtube" class="w-5 h-5"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-8 text-lg">Sundays</h4>
+                    <ul class="space-y-5 text-sm text-gray-400">
+                        <li class="flex items-center gap-3"><i data-lucide="clock" class="w-5 h-5 text-church-accent"></i> <span>9:00 AM & 11:00 AM</span></li>
+                        <li class="flex items-start gap-3"><i data-lucide="map-pin" class="w-5 h-5 text-church-accent mt-0.5"></i> <span>Kathmandu, Nepal</span></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-8 text-lg">Quick Links</h4>
+                    <ul class="space-y-4 text-sm text-gray-400">
+                        <li><a href="index.html" class="hover:text-church-accent transition-colors flex items-center gap-2"><i data-lucide="chevron-right" class="w-3 h-3"></i> Home</a></li>
+                        <li><a href="about.html" class="hover:text-church-accent transition-colors flex items-center gap-2"><i data-lucide="chevron-right" class="w-3 h-3"></i> About</a></li>
+                        <li><a href="ministries.html" class="hover:text-church-accent transition-colors flex items-center gap-2"><i data-lucide="chevron-right" class="w-3 h-3"></i> Ministries</a></li>
+                        <li><a href="events.html" class="hover:text-church-accent transition-colors flex items-center gap-2"><i data-lucide="chevron-right" class="w-3 h-3"></i> Events</a></li>
+                        <li><a href="give.html" class="hover:text-church-accent transition-colors flex items-center gap-2"><i data-lucide="chevron-right" class="w-3 h-3"></i> Give</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-8 text-lg">Weekly Update</h4>
+                    <p class="text-gray-400 text-sm mb-6">Sign up for our weekly newsletter to stay connected with what's happening.</p>
+                    <form class="flex gap-2" onsubmit="event.preventDefault(); alert('Subscribed!');">
+                        <input type="email" placeholder="Email Address" class="bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-sm text-white w-full focus:outline-none focus:border-church-accent transition-colors placeholder-gray-600">
+                        <button type="submit" class="bg-church-accent text-white px-5 py-3 rounded-lg hover:bg-white hover:text-church-accent transition-colors font-bold">Go</button>
+                    </form>
+                </div>
+            </div>
+            <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-gray-500">
+                <p>&copy; 2025 Kathmandu Vijaya Mandali. All rights reserved.</p>
+                <div class="flex gap-6 mt-4 md:mt-0">
+                    <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+                    <a href="#" class="hover:text-white transition-colors">Terms of Use</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Visit Modal -->
+    <div id="plan-visit-modal" class="hidden fixed inset-0 z-[60] overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+            <div id="modal-backdrop" class="fixed inset-0 bg-church-dark/80 backdrop-blur-sm opacity-0 transition-opacity duration-300" aria-hidden="true" onclick="document.getElementById('plan-visit-modal').classList.add('hidden')"></div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            <div id="modal-panel" class="inline-block align-bottom bg-white rounded-3xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full scale-95 opacity-0">
+                <div class="px-6 py-8 sm:p-10">
+                    <div class="flex justify-between items-center mb-8">
+                        <h3 class="text-3xl leading-6 font-serif font-bold text-church-dark">Plan Your Visit</h3>
+                        <button onclick="document.getElementById('plan-visit-modal').classList.add('hidden')" class="text-gray-400 hover:text-church-dark transition-colors bg-gray-100 p-2 rounded-full">
+                            <i data-lucide="x" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+                    <form class="space-y-5">
+                        <input type="text" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-church-dark" placeholder="Full Name">
+                        <input type="email" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-church-dark" placeholder="Email">
+                        <button type="button" onclick="alert('Thanks!'); document.getElementById('plan-visit-modal').classList.add('hidden')" class="w-full mt-6 bg-church-accent text-white py-4 rounded-xl font-bold hover:bg-church-dark transition-colors">Confirm Visit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Hero Animation
+        gsap.to(".gsap-hero", {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            ease: "power3.out"
+        });
+
+        // Cards Stagger
+        gsap.utils.toArray('.gsap-card').forEach((card, i) => {
+            gsap.to(card, {
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                delay: i * 0.15,
+                scrollTrigger: {
+                    trigger: card,
+                    start: "top 85%"
+                }
+            });
+        });
+
+        // Mobile Menu
+        let menuOpen = false;
+        const menuTl = gsap.timeline({ paused: true });
+        menuTl.to("#mobile-menu", { x: "0%", duration: 0.5, ease: "power4.inOut" })
+              .from(".mobile-link", { y: 40, opacity: 0, stagger: 0.1, duration: 0.4, ease: "power3.out" }, "-=0.3");
+
+        const menuBtn = document.getElementById('menu-btn');
+        function toggleMenu() {
+            if (!menuOpen) {
+                menuTl.play();
+                menuOpen = true;
+                menuBtn.innerHTML = '<div class="menu-icon-container"><i data-lucide="x" class="w-8 h-8 text-church-dark"></i></div>';
+                lucide.createIcons();
+            } else {
+                menuTl.reverse();
+                menuOpen = false;
+                menuBtn.innerHTML = '<div class="menu-icon-container"><i data-lucide="menu" class="w-8 h-8"></i></div>';
+                lucide.createIcons();
+            }
+        }
+        menuBtn.addEventListener('click', toggleMenu);
+
+        // Copy Clipboard
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Account number copied to clipboard!');
+            });
+        }
+
+        // Wallet Switch Logic
+        function switchWallet(wallet) {
+            const qrContainer = document.getElementById('qr-container');
+            const qrIcon = document.getElementById('qr-icon');
+            const qrText = document.getElementById('qr-text');
+            
+            // Remove active classes from all buttons
+            document.querySelectorAll('.wallet-btn').forEach(btn => {
+                btn.classList.remove('ring-2', 'ring-offset-2');
+                
+                // Reset styles based on specific button class (hacky but effective for raw html)
+                if(btn.classList.contains('btn-esewa')) btn.classList.remove('ring-brand-esewa');
+                if(btn.classList.contains('btn-khalti')) btn.classList.remove('ring-brand-khalti');
+                if(btn.classList.contains('btn-ime')) btn.classList.remove('ring-red-600');
+            });
+
+            // Set active class
+            const activeBtn = document.querySelector(`.btn-${wallet}`);
+            if(activeBtn) {
+                activeBtn.classList.add('ring-2', 'ring-offset-2');
+                if(wallet === 'esewa') activeBtn.classList.add('ring-brand-esewa');
+                if(wallet === 'khalti') activeBtn.classList.add('ring-brand-khalti');
+                if(wallet === 'ime') activeBtn.classList.add('ring-red-600');
+            }
+
+            // Update QR Display
+            if (wallet === 'esewa') {
+                qrContainer.className = "bg-brand-esewa/10 w-48 h-48 rounded-lg mb-6 flex items-center justify-center relative overflow-hidden transition-colors duration-300";
+                qrIcon.className = "w-20 h-20 text-brand-esewa transition-colors duration-300";
+                qrText.innerText = "Scan eSewa";
+                qrText.className = "bg-white px-4 py-1.5 rounded-full text-sm font-bold shadow-md text-brand-esewa transition-colors duration-300";
+            } else if (wallet === 'khalti') {
+                qrContainer.className = "bg-brand-khalti/10 w-48 h-48 rounded-lg mb-6 flex items-center justify-center relative overflow-hidden transition-colors duration-300";
+                qrIcon.className = "w-20 h-20 text-brand-khalti transition-colors duration-300";
+                qrText.innerText = "Scan Khalti";
+                qrText.className = "bg-white px-4 py-1.5 rounded-full text-sm font-bold shadow-md text-brand-khalti transition-colors duration-300";
+            } else if (wallet === 'ime') {
+                qrContainer.className = "bg-red-50 w-48 h-48 rounded-lg mb-6 flex items-center justify-center relative overflow-hidden transition-colors duration-300";
+                qrIcon.className = "w-20 h-20 text-red-600 transition-colors duration-300";
+                qrText.innerText = "Scan IME Pay";
+                qrText.className = "bg-white px-4 py-1.5 rounded-full text-sm font-bold shadow-md text-red-600 transition-colors duration-300";
+            }
+        }
+
+        // Modal Logic
+        const modal = document.getElementById('plan-visit-modal');
+        const backdrop = modal.querySelector('#modal-backdrop');
+        const panel = modal.querySelector('#modal-panel');
+        
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.type === "attributes" && mutation.attributeName === "class") {
+                    if (!modal.classList.contains('hidden')) {
+                        gsap.to(backdrop, { opacity: 1, duration: 0.3 });
+                        gsap.to(panel, { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(1.2)" });
+                    } else {
+                        gsap.set(backdrop, { opacity: 0 });
+                        gsap.set(panel, { scale: 0.95, opacity: 0 });
+                    }
+                }
+            });
+        });
+        observer.observe(modal, { attributes: true });
+    </script>
+</body>
+</html>

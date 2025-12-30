@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finding Peace | Kathmandu Vijaya Mandali</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <!-- Custom Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        serif: ['Lora', 'serif'],
+                    },
+                    colors: {
+                        church: {
+                            main: '#ffffff',
+                            secondary: '#f8fafc',
+                            accent: '#059669',
+                            dark: '#0f172a',
+                            muted: '#64748b',
+                            gold: '#d4af37'
+                        }
+                    },
+                    typography: (theme) => ({
+                        DEFAULT: {
+                            css: {
+                                color: theme('colors.church.muted'),
+                                h2: {
+                                    color: theme('colors.church.dark'),
+                                    fontFamily: theme('fontFamily.serif'),
+                                },
+                                h3: {
+                                    color: theme('colors.church.dark'),
+                                    fontFamily: theme('fontFamily.serif'),
+                                },
+                                strong: {
+                                    color: theme('colors.church.dark'),
+                                },
+                            },
+                        },
+                    }),
+                }
+            },
+            plugins: [],
+        }
+    </script>
+    <style>
+        .gsap-hidden { opacity: 0; visibility: hidden; }
+        .menu-icon-container { display: flex; align-items: center; justify-content: center; }
+    </style>
+</head>
+<body class="bg-church-main text-church-dark font-sans antialiased">
+
+    <!-- Navigation -->
+    <nav id="navbar" class="fixed w-full z-50 py-4 bg-white/95 backdrop-blur-md border-b border-gray-100 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
+            <!-- Logo -->
+            <a href="index.html" class="flex items-center gap-2 group">
+                <div class="w-10 h-10 bg-church-accent rounded-full flex items-center justify-center text-white shadow-lg shadow-church-accent/30">
+                    <i data-lucide="sprout" class="w-5 h-5 fill-current"></i>
+                </div>
+                <div class="flex flex-col">
+                    <span class="font-serif text-xl font-bold tracking-tight group-hover:text-church-accent transition-colors">KVM</span>
+                    <span class="text-[10px] uppercase tracking-[0.1em] text-church-muted">Kathmandu Vijaya Mandali</span>
+                </div>
+            </a>
+
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex items-center gap-6 lg:gap-8">
+                <a href="index.html" class="text-sm font-medium hover:text-church-accent transition-colors">Home</a>
+                <a href="about.html" class="text-sm font-medium hover:text-church-accent transition-colors">About</a>
+                <a href="sermons.html" class="text-sm font-medium hover:text-church-accent transition-colors">Sermons</a>
+                <a href="ministries.html" class="text-sm font-medium hover:text-church-accent transition-colors">Ministries</a>
+                <a href="events.html" class="text-sm font-medium hover:text-church-accent transition-colors">Events</a>
+                <a href="gallery.html" class="text-sm font-medium hover:text-church-accent transition-colors">Gallery</a>
+                <a href="articles.html" class="text-sm font-bold text-church-accent transition-colors">Articles</a>
+                <a href="give.html" class="text-sm font-medium hover:text-church-accent transition-colors">Give</a>
+            </div>
+
+            <!-- CTA & Mobile Toggle -->
+            <div class="flex items-center gap-4">
+                <button onclick="document.getElementById('plan-visit-modal').classList.remove('hidden')" class="hidden md:flex bg-church-dark text-white px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-church-accent hover:shadow-lg hover:shadow-church-accent/20 transition-all duration-300 transform hover:scale-105">
+                    Plan Your Visit
+                </button>
+                <button id="menu-btn" class="md:hidden text-church-dark hover:text-church-accent z-50 relative">
+                    <div class="menu-icon-container">
+                         <i data-lucide="menu" class="w-8 h-8"></i>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu" class="fixed inset-0 z-40 bg-white transform translate-x-full flex flex-col justify-center items-center gap-8 text-church-dark">
+        <div class="mobile-link-container overflow-hidden"><a href="index.html" class="block text-3xl font-serif hover:text-church-accent mobile-link" onclick="toggleMenu()">Home</a></div>
+        <div class="mobile-link-container overflow-hidden"><a href="about.html" class="block text-3xl font-serif hover:text-church-accent mobile-link" onclick="toggleMenu()">About</a></div>
+        <div class="mobile-link-container overflow-hidden"><a href="sermons.html" class="block text-3xl font-serif hover:text-church-accent mobile-link" onclick="toggleMenu()">Sermons</a></div>
+        <div class="mobile-link-container overflow-hidden"><a href="ministries.html" class="block text-3xl font-serif hover:text-church-accent mobile-link" onclick="toggleMenu()">Ministries</a></div>
+        <div class="mobile-link-container overflow-hidden"><a href="events.html" class="block text-3xl font-serif hover:text-church-accent mobile-link" onclick="toggleMenu()">Events</a></div>
+        <div class="mobile-link-container overflow-hidden"><a href="gallery.html" class="block text-3xl font-serif hover:text-church-accent mobile-link" onclick="toggleMenu()">Gallery</a></div>
+        <div class="mobile-link-container overflow-hidden"><a href="articles.html" class="block text-3xl font-serif text-church-accent mobile-link" onclick="toggleMenu()">Articles</a></div>
+        <div class="mobile-link-container overflow-hidden"><a href="give.html" class="block text-3xl font-serif hover:text-church-accent mobile-link" onclick="toggleMenu()">Give</a></div>
+        <div class="mobile-link-container overflow-hidden">
+            <button onclick="document.getElementById('plan-visit-modal').classList.remove('hidden'); toggleMenu()" class="mt-4 bg-church-accent text-white px-8 py-3 rounded-full text-lg font-semibold shadow-xl shadow-church-accent/30 mobile-link">
+                Plan Your Visit
+            </button>
+        </div>
+    </div>
+
+    <!-- Article Header -->
+    <header class="pt-32 pb-12 md:pt-48 md:pb-20 bg-church-secondary relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-1/2 h-full bg-church-accent/5 -skew-x-12 translate-x-20"></div>
+        <div class="max-w-4xl mx-auto px-6 text-center relative z-10">
+            
+            <div class="mb-6">
+                <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-gray-100 text-church-accent text-xs font-bold uppercase tracking-widest shadow-sm">
+                    Devotional
+                </span>
+            </div>
+            
+            <h1 class="text-4xl md:text-6xl font-serif font-bold text-church-dark mb-8 leading-tight">Finding Peace in the Chaos of Kathmandu</h1>
+            
+            <div class="flex items-center justify-center gap-4 text-left">
+                <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=2000&auto=format&fit=crop" class="w-12 h-12 rounded-full object-cover border-2 border-white shadow-md">
+                <div>
+                    <span class="block text-sm font-bold text-church-dark">Pastor John Doe</span>
+                    <span class="block text-xs text-church-muted">Dec 20, 2025 • 5 min read</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Image -->
+    <div class="max-w-5xl mx-auto px-6 -mt-8 md:-mt-16 relative z-20">
+        <img src="https://images.unsplash.com/photo-1506784983877-45594efa4cbe?q=80&w=2668&auto=format&fit=crop" class="w-full rounded-3xl shadow-2xl">
+    </div>
+
+    <!-- Content -->
+    <article class="max-w-3xl mx-auto px-6 py-16 md:py-24">
+        <div class="prose prose-lg prose-slate mx-auto leading-relaxed text-church-muted">
+            <p class="mb-6 first-letter:text-5xl first-letter:font-serif first-letter:font-bold first-letter:text-church-accent first-letter:float-left first-letter:mr-3">
+                Kathmandu is a city of senses. The sound of horns, the smell of incense and exhaust, the vibrant colors of prayer flags fluttering against grey buildings. It is beautiful, energetic, and often, overwhelming. In the midst of this constant motion, how do we cultivate a "quiet heart" as scripture commands?
+            </p>
+
+            <h2 class="text-2xl font-serif font-bold text-church-dark mt-12 mb-6">The Noise Within</h2>
+            <p class="mb-6">
+                Often, the noise outside is just a reflection of the noise inside. We worry about tomorrow, we replay yesterday, and we miss the presence of God in the present moment. Psalm 46:10 says, "Be still, and know that I am God." The Hebrew word for "be still" implies ceasing from striving, letting go, relaxing our grip.
+            </p>
+
+            <h3 class="text-xl font-serif font-bold text-church-dark mt-10 mb-4">Practical Steps for stillness</h3>
+            <ul class="list-disc pl-5 mb-8 space-y-2">
+                <li><strong>Start your day with silence:</strong> Before checking your phone, spend 5 minutes in silence.</li>
+                <li><strong>Create a sacred space:</strong> Find a corner in your home that is dedicated to prayer.</li>
+                <li><strong>Scripture meditation:</strong> Instead of reading large chunks, meditate on a single verse throughout the day.</li>
+            </ul>
+
+            <blockquote class="border-l-4 border-church-accent pl-6 italic text-xl text-church-dark my-10 bg-church-secondary/50 py-4 pr-4 rounded-r-lg">
+                "Peace is not the absence of trouble, but the presence of Christ."
+            </blockquote>
+
+            <p class="mb-6">
+                As we navigate the busy streets of our city this week, let us carry a portable sanctuary within us. When the traffic stops, instead of frustration, choose prayer. When the noise rises, let your praise rise higher. God is not distant from the chaos; He is the peace within it.
+            </p>
+        </div>
+
+        <!-- Share -->
+        <div class="border-t border-b border-gray-100 py-8 my-12 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                 <button class="flex items-center gap-2 text-church-accent font-bold hover:text-church-dark transition-colors" onclick="window.print()">
+                    <i data-lucide="printer" class="w-4 h-4"></i> Print / Save PDF
+                </button>
+            </div>
+            <div class="flex gap-3">
+                <button class="w-10 h-10 rounded-full bg-church-secondary flex items-center justify-center text-church-dark hover:bg-church-accent hover:text-white transition-colors"><i data-lucide="facebook" class="w-4 h-4"></i></button>
+                <button class="w-10 h-10 rounded-full bg-church-secondary flex items-center justify-center text-church-dark hover:bg-church-accent hover:text-white transition-colors"><i data-lucide="twitter" class="w-4 h-4"></i></button>
+                <button class="w-10 h-10 rounded-full bg-church-secondary flex items-center justify-center text-church-dark hover:bg-church-accent hover:text-white transition-colors"><i data-lucide="link" class="w-4 h-4"></i></button>
+            </div>
+        </div>
+
+        <!-- Related -->
+        <div>
+            <h3 class="text-2xl font-serif font-bold text-church-dark mb-8">Read Next</h3>
+            <div class="grid md:grid-cols-2 gap-8">
+                <a href="#" class="group block">
+                    <div class="h-48 rounded-xl overflow-hidden mb-4">
+                        <img src="https://images.unsplash.com/photo-1490129374918-725947a070e7?q=80&w=2670&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition-transform">
+                    </div>
+                    <h4 class="font-bold text-lg text-church-dark group-hover:text-church-accent transition-colors">Walking by Faith</h4>
+                    <p class="text-sm text-church-muted mt-1">Exploring what it means to trust God...</p>
+                </a>
+                <a href="#" class="group block">
+                    <div class="h-48 rounded-xl overflow-hidden mb-4">
+                        <img src="https://images.unsplash.com/photo-1507692049790-de58293a4697?q=80&w=2670&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition-transform">
+                    </div>
+                    <h4 class="font-bold text-lg text-church-dark group-hover:text-church-accent transition-colors">The Power of Community</h4>
+                    <p class="text-sm text-church-muted mt-1">Why we are designed for relationship...</p>
+                </a>
+            </div>
+        </div>
+    </article>
+
+    <!-- Footer -->
+    <footer class="bg-church-dark py-12">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center text-white/60 text-sm">
+            <p>&copy; 2025 Kathmandu Vijaya Mandali</p>
+            <div class="flex gap-6 mt-4 md:mt-0">
+                <a href="index.html" class="hover:text-white transition-colors">Home</a>
+                <a href="articles.html" class="hover:text-white transition-colors">All Articles</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Visit Modal (Standard) -->
+    <div id="plan-visit-modal" class="hidden fixed inset-0 z-[60] overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+            <div id="modal-backdrop" class="fixed inset-0 bg-church-dark/80 backdrop-blur-sm opacity-0 transition-opacity duration-300" aria-hidden="true" onclick="document.getElementById('plan-visit-modal').classList.add('hidden')"></div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            <div id="modal-panel" class="inline-block align-bottom bg-white rounded-3xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full scale-95 opacity-0">
+                <div class="px-6 py-8 sm:p-10">
+                    <div class="flex justify-between items-center mb-8">
+                        <h3 class="text-3xl leading-6 font-serif font-bold text-church-dark">Plan Your Visit</h3>
+                        <button onclick="document.getElementById('plan-visit-modal').classList.add('hidden')" class="text-gray-400 hover:text-church-dark transition-colors bg-gray-100 p-2 rounded-full">
+                            <i data-lucide="x" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+                    <form class="space-y-5">
+                        <input type="text" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-church-dark" placeholder="Full Name">
+                        <input type="email" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-church-dark" placeholder="Email">
+                        <button type="button" onclick="alert('Thanks!'); document.getElementById('plan-visit-modal').classList.add('hidden')" class="w-full mt-6 bg-church-accent text-white py-4 rounded-xl font-bold hover:bg-church-dark transition-colors">Confirm Visit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+        gsap.registerPlugin(ScrollTrigger);
+        
+        // Mobile Menu
+        let menuOpen = false;
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        function toggleMenu() {
+            if(!menuOpen) {
+                // Open menu
+                mobileMenu.style.transform = 'translateX(0)';
+                menuBtn.innerHTML = '<div class="menu-icon-container"><i data-lucide="x" class="w-8 h-8 text-church-dark"></i></div>';
+            } else {
+                // Close menu
+                mobileMenu.style.transform = 'translateX(100%)';
+                menuBtn.innerHTML = '<div class="menu-icon-container"><i data-lucide="menu" class="w-8 h-8"></i></div>';
+            }
+            lucide.createIcons();
+            menuOpen = !menuOpen;
+        }
+
+        // Modal Logic
+        const visitModal = document.getElementById('plan-visit-modal');
+        const visitBackdrop = visitModal.querySelector('#modal-backdrop');
+        const visitPanel = visitModal.querySelector('#modal-panel');
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.type === "attributes" && mutation.attributeName === "class") {
+                    if (!visitModal.classList.contains('hidden')) {
+                        gsap.to(visitBackdrop, { opacity: 1, duration: 0.3 });
+                        gsap.to(visitPanel, { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(1.2)" });
+                    } else {
+                        gsap.set(visitBackdrop, { opacity: 0 });
+                        gsap.set(visitPanel, { scale: 0.95, opacity: 0 });
+                    }
+                }
+            });
+        });
+        observer.observe(visitModal, { attributes: true });
+    </script>
+</body>
+</html>
